@@ -246,6 +246,7 @@ class QueryEngine {
     private DataFrame executeDiffJoinQuery(final Join first, final Join second,
         final List<String> explainColumnNames, final double minRatioMetric, final double minSupport,
         final int maxOrder) throws MacrobaseException {
+        final long startTime = System.currentTimeMillis();
 
         final DataFrame outlierDf = getDataFrameForRelation(first.getLeft()); // table R
         final DataFrame inlierDf = getDataFrameForRelation(second.getLeft()); // table S
@@ -450,6 +451,7 @@ class QueryEngine {
             savedAggregates.put(curOrder, curSavedAggregates);
             setNext.put(curOrder, curOrderNext);
         }
+        log.info("Time spent in DiffJoin:  {} ms", System.currentTimeMillis() - startTime);
 
         // 4) Construct DataFrame of results
         List<APLExplanationResult> results = new ArrayList<>();
@@ -838,6 +840,7 @@ class QueryEngine {
      * TODO
      */
     private DataFrame evaluateJoin(Join join) throws MacrobaseException {
+        final long startTime = System.currentTimeMillis();
         final DataFrame left = getDataFrameForRelation(join.getLeft());
         final DataFrame right = getDataFrameForRelation(join.getRight());
 
@@ -921,6 +924,7 @@ class QueryEngine {
                         }
                     }
                 }
+                log.info("Time spent in Join:  {} ms", System.currentTimeMillis() - startTime);
 
                 final DataFrame df = new DataFrame();
                 // Add String results
